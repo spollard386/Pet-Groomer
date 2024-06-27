@@ -1,1 +1,235 @@
+/**
+ * Class representing a pet in a boarding facility.
+ */
+public class Pet {
+
+    // Constants for daily rates
+    private static final double DOG_RATE_UNDER_2 = 25.00;
+    private static final double DOG_RATE_2_TO_5 = 20.00;
+    private static final double DOG_RATE_OVER_5 = 15.00;
+    private static final double CAT_RATE = 18.00;
+
+    // Private instance variables
+    private String type;
+    private String name;
+    private int age;
+    private boolean needsDogSpace;
+    private boolean needsCatSpace;
+    private int stayDuration;
+    private double totalAmountDue;
+
+    /**
+     * Default constructor initializing all attributes to default values.
+     */
+    public Pet() {
+        this("", "", 0, false, false, 0, 0.0);
+    }
+
+    /**
+     * Parameterized constructor initializing attributes with provided values.
+     *
+     * @param type            Type of the pet (e.g., dog, cat).
+     * @param name            Name of the pet.
+     * @param age             Age of the pet.
+     * @param needsDogSpace   Whether the pet requires dog boarding space.
+     * @param needsCatSpace   Whether the pet requires cat boarding space.
+     * @param stayDuration    Number of days the pet will stay.
+     * @param totalAmountDue  Total amount due for the pet's stay.
+     */
+    public Pet(String type, String name, int age, boolean needsDogSpace, boolean needsCatSpace, int stayDuration, double totalAmountDue) {
+        this.type = type;
+        this.name = name;
+        this.age = age;
+        this.needsDogSpace = needsDogSpace;
+        this.needsCatSpace = needsCatSpace;
+        this.stayDuration = stayDuration;
+        this.totalAmountDue = totalAmountDue;
+    }
+
+    // Getter and setter methods
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        if (type == null || type.isEmpty()) {
+            throw new IllegalArgumentException("Type cannot be null or empty.");
+        }
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        if (age < 0) {
+            throw new IllegalArgumentException("Age cannot be negative.");
+        }
+        this.age = age;
+    }
+
+    public boolean needsDogSpace() {
+        return needsDogSpace;
+    }
+
+    public void setNeedsDogSpace(boolean needsDogSpace) {
+        this.needsDogSpace = needsDogSpace;
+    }
+
+    public boolean needsCatSpace() {
+        return needsCatSpace;
+    }
+
+    public void setNeedsCatSpace(boolean needsCatSpace) {
+        this.needsCatSpace = needsCatSpace;
+    }
+
+    public int getStayDuration() {
+        return stayDuration;
+    }
+
+    public void setStayDuration(int stayDuration) {
+        if (stayDuration < 0) {
+            throw new IllegalArgumentException("Stay duration cannot be negative.");
+        }
+        this.stayDuration = stayDuration;
+    }
+
+    public double getTotalAmountDue() {
+        return totalAmountDue;
+    }
+
+    public void setTotalAmountDue(double totalAmountDue) {
+        if (totalAmountDue < 0) {
+            throw new IllegalArgumentException("Total amount due cannot be negative.");
+        }
+        this.totalAmountDue = totalAmountDue;
+    }
+
+    /**
+     * Check in the pet and calculate the initial amount due.
+     */
+    public void checkIn() {
+        double dailyRate = calculateDailyRate(type, age);
+        totalAmountDue = dailyRate * stayDuration;
+        System.out.println(name + " has been checked in. Initial amount due: $" + totalAmountDue);
+    }
+
+    /**
+     * Check out the pet and reset the stay details.
+     */
+    public void checkOut() {
+        System.out.println(name + " has been checked out. Total amount due: $" + totalAmountDue);
+        // Reset the stay details
+        resetStayDetails();
+    }
+
+    /**
+     * Retrieve the pet's details.
+     *
+     * @return String representation of the pet's details.
+     */
+    public String getPetDetails() {
+        return this.toString();
+    }
+
+    /**
+     * Create a new pet entry.
+     *
+     * @param type            Type of the pet (e.g., dog, cat).
+     * @param name            Name of the pet.
+     * @param age             Age of the pet.
+     * @param needsDogSpace   Whether the pet requires dog boarding space.
+     * @param needsCatSpace   Whether the pet requires cat boarding space.
+     * @param stayDuration    Number of days the pet will stay.
+     * @param totalAmountDue  Total amount due for the pet's stay.
+     */
+    public void createPet(String type, String name, int age, boolean needsDogSpace, boolean needsCatSpace, int stayDuration, double totalAmountDue) {
+        setType(type);
+        setName(name);
+        setAge(age);
+        setNeedsDogSpace(needsDogSpace);
+        setNeedsCatSpace(needsCatSpace);
+        setStayDuration(stayDuration);
+        setTotalAmountDue(totalAmountDue);
+        System.out.println("Pet created: " + this.toString());
+    }
+
+    /**
+     * Update the pet's details.
+     *
+     * @param type            Type of the pet (e.g., dog, cat).
+     * @param name            Name of the pet.
+     * @param age             Age of the pet.
+     * @param needsDogSpace   Whether the pet requires dog boarding space.
+     * @param needsCatSpace   Whether the pet requires cat boarding space.
+     * @param stayDuration    Number of days the pet will stay.
+     * @param totalAmountDue  Total amount due for the pet's stay.
+     */
+    public void updatePet(String type, String name, int age, boolean needsDogSpace, boolean needsCatSpace, int stayDuration, double totalAmountDue) {
+        setType(type);
+        setName(name);
+        setAge(age);
+        setNeedsDogSpace(needsDogSpace);
+        setNeedsCatSpace(needsCatSpace);
+        setStayDuration(stayDuration);
+        setTotalAmountDue(totalAmountDue);
+        System.out.println("Pet updated: " + this.toString());
+    }
+
+    /**
+     * Calculate the daily rate based on the pet type and age.
+     *
+     * @param type Type of the pet (e.g., dog, cat).
+     * @param age  Age of the pet.
+     * @return Daily rate for the pet.
+     */
+    private double calculateDailyRate(String type, int age) {
+        if (type.equalsIgnoreCase("dog")) {
+            if (age < 2) {
+                return DOG_RATE_UNDER_2;
+            } else if (age <= 5) {
+                return DOG_RATE_2_TO_5;
+            } else {
+                return DOG_RATE_OVER_5;
+            }
+        } else if (type.equalsIgnoreCase("cat")) {
+            return CAT_RATE;
+        }
+        return 0.0;
+    }
+
+    /**
+     * Reset the stay details to default values.
+     */
+    private void resetStayDetails() {
+        this.stayDuration = 0;
+        this.totalAmountDue = 0.0;
+    }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", needsDogSpace=" + needsDogSpace +
+                ", needsCatSpace=" + needsCatSpace +
+                ", stayDuration=" + stayDuration +
+                ", totalAmountDue=" + totalAmountDue +
+                '}';
+    }
+}
 
