@@ -1,0 +1,221 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Class representing a pet in a boarding facility.
+ */
+public class Pet {
+
+    // Private instance variables
+    private String petType;
+    private String petName;
+    private int petAge;A
+    private boolean dogSpace;
+    private boolean catSpace;
+    private int daysStay;
+    private double amountDue;
+
+    /**
+     * Default constructor initializing all attributes to default values.
+     */
+    public Pet() {
+        this.petType = "";
+        this.petName = "";
+        this.petAge = 0;
+        this.dogSpace = false;
+        this.catSpace = false;
+        this.daysStay = 0;
+        this.amountDue = 0.0;
+    }
+
+    /**
+     * Parameterized constructor initializing attributes with provided values.
+     *
+     * @param petType   Type of the pet (e.g., dog, cat).
+     * @param petName   Name of the pet.
+     * @param petAge    Age of the pet.
+     * @param dogSpace  Whether the pet requires dog boarding space.
+     * @param catSpace  Whether the pet requires cat boarding space.
+     * @param daysStay  Number of days the pet will stay.
+     * @param amountDue Total amount due for the pet's stay.
+     */
+    public Pet(String petType, String petName, int petAge, boolean dogSpace, boolean catSpace, int daysStay, double amountDue) {
+        this.petType = petType;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.dogSpace = dogSpace;
+        this.catSpace = catSpace;
+        this.daysStay = daysStay;
+        this.amountDue = amountDue;
+    }
+
+    // Getter and setter methods
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+
+    public String getPetName() {
+        return petName;
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    public int getPetAge() {
+        return petAge;
+    }
+
+    public void setPetAge(int petAge) {
+        this.petAge = petAge;
+    }
+
+    public boolean isDogSpace() {
+        return dogSpace;
+    }
+
+    public void setDogSpace(boolean dogSpace) {
+        this.dogSpace = dogSpace;
+    }
+
+    public boolean isCatSpace() {
+        return catSpace;
+    }
+
+    public void setCatSpace(boolean catSpace) {
+        this.catSpace = catSpace;
+    }
+
+    public int getDaysStay() {
+        return daysStay;
+    }
+
+    public void setDaysStay(int daysStay) {
+        this.daysStay = daysStay;
+    }
+
+    public double getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(double amountDue) {
+        this.amountDue = amountDue;
+    }
+
+    /**
+     * Save the pet to the database.
+     */
+    public void saveToDatabase() {
+        String url = "jdbc:mysql://localhost:3306/petboarding";
+        String username = "root";
+        String password = "password";
+
+        String sql = "INSERT INTO pets (petType, petName, petAge, dogSpace, catSpace, daysStay, amountDue) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, this.petType);
+            pstmt.setString(2, this.petName);
+            pstmt.setInt(3, this.petAge);
+            pstmt.setBoolean(4, this.dogSpace);
+            pstmt.setBoolean(5, this.catSpace);
+            pstmt.setInt(6, this.daysStay);
+            pstmt.setDouble(7, this.amountDue);
+
+            pstmt.executeUpdate();
+            System.out.println("Pet saved to database: " + this.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Update the pet in the database.
+     */
+    public void updateInDatabase(int petId) {
+        String url = "jdbc:mysql://localhost:3306/petboarding";
+        String username = "root";
+        String password = "password";
+
+        String sql = "UPDATE pets SET petType = ?, petName = ?, petAge = ?, dogSpace = ?, catSpace = ?, daysStay = ?, amountDue = ? WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, this.petType);
+            pstmt.setString(2, this.petName);
+            pstmt.setInt(3, this.petAge);
+            pstmt.setBoolean(4, this.dogSpace);
+            pstmt.setBoolean(5, this.catSpace);
+            pstmt.setInt(6, this.daysStay);
+            pstmt.setDouble(7, this.amountDue);
+            pstmt.setInt(8, petId);
+
+            pstmt.executeUpdate();
+            System.out.println("Pet updated in database: " + this.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retrieve a pet from the database by ID.
+     */
+    public static Pet getFromDatabase(int petId) {
+        String url = "jdbc:mysql://localhost:3306/petboarding";
+        String username = "root";
+        String password = "password";
+
+        String sql = "SELECT * FROM pets WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, petId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String petType = rs.getString("petType");
+                String petName = rs.getString("petName");
+                int petAge = rs.getInt("petAge");
+                boolean dogSpace = rs.getBoolean("dogSpace");
+                boolean catSpace = rs.getBoolean("catSpace");
+                int daysStay = rs.getInt("daysStay");
+                double amountDue = rs.getDouble("amountDue");
+
+                Pet pet = new Pet(petType, petName, petAge, dogSpace, catSpace, daysStay, amountDue);
+                System.out.println("Pet retrieved from database: " + pet.toString());
+                return pet;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "petType='" + petType + '\'' +
+                ", petName='" + petName + '\'' +
+                ", petAge=" + petAge +
+                ", dogSpace=" + dogSpace +
+                ", catSpace=" + catSpace +
+                ", daysStay=" + daysStay +
+                ", amountDue=" + amountDue +
+                '}';
+    }
+}
