@@ -1,0 +1,205 @@
+/**
+ * Class representing a pet in a boarding facility.
+ */
+public class Pet {
+
+    // Private instance variables
+    private String petType;
+    private String petName;
+    private int petAge;
+    private boolean dogSpace;
+    private boolean catSpace;
+    private int daysStay;
+    private double amountDue;
+
+    /**
+     * Default constructor initializing all attributes to default values.
+     */
+    public Pet() {
+        this.petType = "";
+        this.petName = "";
+        this.petAge = 0;
+        this.dogSpace = false;
+        this.catSpace = false;
+        this.daysStay = 0;
+        this.amountDue = 0.0;
+    }
+
+    /**
+     * Parameterized constructor initializing attributes with provided values.
+     *
+     * @param petType   Type of the pet (e.g., dog, cat).
+     * @param petName   Name of the pet.
+     * @param petAge    Age of the pet.
+     * @param dogSpace  Whether the pet requires dog boarding space.
+     * @param catSpace  Whether the pet requires cat boarding space.
+     * @param daysStay  Number of days the pet will stay.
+     * @param amountDue Total amount due for the pet's stay.
+     */
+    public Pet(String petType, String petName, int petAge, boolean dogSpace, boolean catSpace, int daysStay, double amountDue) {
+        this.petType = petType;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.dogSpace = dogSpace;
+        this.catSpace = catSpace;
+        this.daysStay = daysStay;
+        this.amountDue = amountDue;
+    }
+
+    // Getter and setter methods
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+
+    public String getPetName() {
+        return petName;
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    public int getPetAge() {
+        return petAge;
+    }
+
+    public void setPetAge(int petAge) {
+        this.petAge = petAge;
+    }
+
+    public boolean isDogSpace() {
+        return dogSpace;
+    }
+
+    public void setDogSpace(boolean dogSpace) {
+        this.dogSpace = dogSpace;
+    }
+
+    public boolean isCatSpace() {
+        return catSpace;
+    }
+
+    public void setCatSpace(boolean catSpace) {
+        this.catSpace = catSpace;
+    }
+
+    public int getDaysStay() {
+        return daysStay;
+    }
+
+    public void setDaysStay(int daysStay) {
+        this.daysStay = daysStay;
+    }
+
+    public double getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(double amountDue) {
+        this.amountDue = amountDue;
+    }
+
+    /**
+     * Check in the pet and calculate the initial amount due.
+     */
+    public void checkIn() {
+        double dailyRate = calculateDailyRate();
+        this.amountDue = dailyRate * this.daysStay;
+        System.out.println(this.petName + " has been checked in. Initial amount due: $" + this.amountDue);
+    }
+
+    /**
+     * Check out the pet and reset the stay details.
+     */
+    public void checkOut() {
+        System.out.println(this.petName + " has been checked out. Total amount due: $" + this.amountDue);
+        // Reset the stay details
+        this.daysStay = 0;
+        this.amountDue = 0.0;
+    }
+
+    /**
+     * Retrieve the pet's details.
+     *
+     * @return String representation of the pet's details.
+     */
+    public String getPetDetails() {
+        return this.toString();
+    }
+
+    /**
+     * Create a new pet entry.
+     *
+     * @param petType   Type of the pet (e.g., dog, cat).
+     * @param petName   Name of the pet.
+     * @param petAge    Age of the pet.
+     * @param dogSpace  Whether the pet requires dog boarding space.
+     * @param catSpace  Whether the pet requires cat boarding space.
+     * @param daysStay  Number of days the pet will stay.
+     * @param amountDue Total amount due for the pet's stay.
+     */
+    public void createPet(String petType, String petName, int petAge, boolean dogSpace, boolean catSpace, int daysStay, double amountDue) {
+        this.petType = petType;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.dogSpace = dogSpace;
+        this.catSpace = catSpace;
+        this.daysStay = daysStay;
+        this.amountDue = amountDue;
+        System.out.println("Pet created: " + this.toString());
+    }
+
+    /**
+     * Update the pet's details.
+     *
+     * @param petType   Type of the pet (e.g., dog, cat).
+     * @param petName   Name of the pet.
+     * @param petAge    Age of the pet.
+     * @param dogSpace  Whether the pet requires dog boarding space.
+     * @param catSpace  Whether the pet requires cat boarding space.
+     * @param daysStay  Number of days the pet will stay.
+     * @param amountDue Total amount due for the pet's stay.
+     */
+    public void updatePet(String petType, String petName, int petAge, boolean dogSpace, boolean catSpace, int daysStay, double amountDue) {
+        this.petType = petType;
+        this.petName = petName;
+        this.petAge = petAge;
+        this.dogSpace = dogSpace;
+        this.catSpace = catSpace;
+        this.daysStay = daysStay;
+        this.amountDue = amountDue;
+        System.out.println("Pet updated: " + this.toString());
+    }
+
+    /**
+     * Calculate the daily rate based on the pet type.
+     *
+     * @return Daily rate for the pet.
+     */
+    private double calculateDailyRate() {
+        double rate;
+        if (this.petType.equalsIgnoreCase("dog")) {
+            rate = 20.00; // Example rate for dogs
+        } else {
+            rate = 18.00; // Example rate for cats
+        }
+        return rate;
+    }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "petType='" + petType + '\'' +
+                ", petName='" + petName + '\'' +
+                ", petAge=" + petAge +
+                ", dogSpace=" + dogSpace +
+                ", catSpace=" + catSpace +
+                ", daysStay=" + daysStay +
+                ", amountDue=" + amountDue +
+                '}';
+    }
+}
